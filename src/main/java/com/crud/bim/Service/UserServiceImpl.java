@@ -1,4 +1,5 @@
 package com.crud.bim.Service;
+
 import com.crud.bim.models.User;
 import com.crud.bim.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -24,7 +26,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    public void saveUser(User user) {
+    public void saveUser(User user) throws Exception {
+        if (!userRepository.findUserByEmail(user.getEmail()).isEmpty()) {
+            throw new Exception("User already exist");
+        }
         userRepository.save(user);
     }
 

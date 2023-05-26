@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New user</title>
+    <title>New person</title>
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/users}" th:object="${user}">
-    <label for="name">ENTER name: </label>
+<form th:method="POST" th:action="@{/users}" th:object="${User}">
+    <label for="name">Enter name: </label>
     <input type="text" th:field="*{name}" id="name"/>
-    /<br>
-    <label for="lastName">ENTER lastName: </label>
-    <input type="text" th:field="*{email}" id="lastName"/>
-    /<br>
-    <label for="age">ENTER age: </label>
-    <input type="number" th:field="*{year}" id="age"/>
-    <br>
-    <input type="submit" value="Save"/>
+    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+    <br/>
+    <label for="email">Enter email: </label>
+    <input type="text" th:field="*{email}" id="email"/>
+    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+    <br/>
+    <label for="year">Enter year: </label>
+    <input type="text" th:field="*{year}" id="year"/>
+    <div style="color:red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">Year Error</div>
+    <br/>
+    <input type="submit" value="Create!"/>
 </form>
 
 </body>
