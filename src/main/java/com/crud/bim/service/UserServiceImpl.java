@@ -1,7 +1,8 @@
-package com.crud.bim.Service;
+package com.crud.bim.service;
 
+import com.crud.bim.exception.PaymentRequiredException;
 import com.crud.bim.models.User;
-import com.crud.bim.repo.UserRepository;
+import com.crud.bim.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUserById(int id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
@@ -26,14 +27,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    public void saveUser(User user) throws Exception {
-        if (!userRepository.findUserByEmail(user.getEmail()).isEmpty()) {
-            throw new Exception("User already exist");
+    public void saveUser(User user) {
+        if (!userRepository.findUserByEmail(user.getEmail()).isEmpty()
+                 && userRepository.findUserById(user.getId()).isEmpty()) {
+            throw new PaymentRequiredException("User already exist");
+        } else {
+            userRepository.save(user);
         }
-        userRepository.save(user);
     }
 
-    public void deleteUserById(int id) {
+
+    public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
 }

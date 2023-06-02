@@ -1,9 +1,13 @@
-package com.crud.bim.Controllers;
+package com.crud.bim.controllers;
 
 
-import com.crud.bim.Service.UserServiceImpl;
+import com.crud.bim.exception.PaymentRequiredException;
+import com.crud.bim.service.UserServiceImpl;
 import com.crud.bim.models.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
+@Slf4j
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -38,7 +42,7 @@ public class UserController {
 
     @PostMapping()
     public String add(@ModelAttribute("User") @Valid User user,
-                      BindingResult bindingResult) throws Exception {
+                      BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "new";
 
@@ -47,13 +51,19 @@ public class UserController {
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") int id, Model model) {
+    public String edit(@PathVariable("id") Long id, Model model) {
         model.addAttribute("User", userService.getUserById(id));
         return "edit";
     }
 
+    @ExceptionHandler()
+    public ResponseEntity<String> handle(PaymentRequiredException exception) {
+        log.error(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.PAYMENT_REQUIRED);
+    }
+
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("User") User user, BindingResult bindingResult) throws Exception {
+    public String update(@ModelAttribute("User") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "edit";
 
@@ -62,7 +72,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id) {
+    public String delete(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
         return "redirect:/users";
     }

@@ -1,4 +1,4 @@
-package com.crud.bim.Service;
+package com.crud.bim.service;
 
 
 import com.crud.bim.models.User;
@@ -6,11 +6,11 @@ import com.crud.bim.models.User;
 import java.util.List;
 
 public interface UserService {
-    User getUserById(int id);
+    User getUserById(Long id);
 
     List<User> getAllUsers();
 
     void saveUser(User user) throws Exception;
 
-    void deleteUserById(int id);
+    void deleteUserById(Long id);
 }
