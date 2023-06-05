@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     public void saveUser(User user) {
         if (!userRepository.findUserByEmail(user.getEmail()).isEmpty()
-                 && userRepository.findUserById(user.getId()).isEmpty()) {
+                && userRepository.findUserById(user.getId()).isEmpty()) {
             throw new PaymentRequiredException("User already exist");
         } else {
             userRepository.save(user);
